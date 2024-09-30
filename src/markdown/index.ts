@@ -114,7 +114,7 @@ export function htmlToElems(html: string): Array<Elem> {
 
   const elements: Elem[] = [];
 
-  parser("hr, h2, pre, p, li").each((index, element) => {
+  parser("hr, h, h2, h3, pre, p, li").each((index, element) => {
     const el = parser(element);
     if (!el) {
       return null;
@@ -169,6 +169,11 @@ export function htmlToElems(html: string): Array<Elem> {
           });
         }
         break;
+      default:
+        elements.push({
+          type: "p_without_link",
+          text: el.text(),
+        });
     }
   });
   return elements;
@@ -234,6 +239,14 @@ export async function elemsToMessage(
                 break;
             }
             currentRoleMessages = [];
+          }
+        }
+
+        // the closing hr tag  might be parse as "h2"
+        if (mustSkipHeaderBlock) {
+          if (duringHeaderBlock) {
+            currentRoleMessages = [];
+            duringHeaderBlock = false;
           }
         }
 
@@ -337,9 +350,9 @@ export function messageBodyToMarkdown(
     .join("\n");
   if (tokenUsae) {
     content += `\n\`\`\`cereb-meta
-input  token: ${tokenUsae.inputToken}
+ input token: ${tokenUsae.inputToken}
 output token: ${tokenUsae.outputToken}
-model       : ${usedModel}
+       model: ${usedModel}
 \`\`\`
 `;
   }
