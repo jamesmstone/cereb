@@ -81,6 +81,10 @@ export function parseMarkdownAsHtml(
 
 export type Elem =
   | {
+      type: "hr";
+      headOfPage: boolean;
+    }
+  | {
       type: "h2";
       id?: string;
       text?: string;
@@ -110,7 +114,7 @@ export function htmlToElems(html: string): Array<Elem> {
 
   const elements: Elem[] = [];
 
-  parser("h2, pre, p, li").each((_index, element) => {
+  parser("hr, h2, pre, p, li").each((index, element) => {
     const el = parser(element);
     if (!el) {
       return null;
@@ -122,6 +126,13 @@ export function htmlToElems(html: string): Array<Elem> {
     const tagName = rawTagName.toLowerCase();
 
     switch (tagName) {
+      case "hr":
+        elements.push({
+          type: "hr",
+          headOfPage: index === 0,
+        });
+        break;
+
       case "h2":
         elements.push({
           type: "h2",
@@ -165,6 +176,7 @@ export function htmlToElems(html: string): Array<Elem> {
 
 export async function elemsToMessage(
   elems: Array<Elem>,
+  ignoreHeaderBlock: boolean = true,
 ): Promise<QueryMessages> {
   let messageHistories: Array<MessageHistory> = [];
 
@@ -173,18 +185,36 @@ export async function elemsToMessage(
 
   const userRoleDesc = roleDescription(Role.User);
   const assistantRoleDesc = roleDescription(Role.Assistant);
+  let beforeHeaderBlock = true;
+  let duringHeaderBlock = false;
+
+  let mustSkipHeaderBlock = false;
+
+  if (elems && elems.length > 0) {
+    if (
+      ignoreHeaderBlock &&
+      elems[0].type == "hr" &&
+      elems[0].headOfPage == true
+    ) {
+      mustSkipHeaderBlock = true;
+    }
+  }
 
   for (const eachElem of elems) {
-    //TODO() debug
-    //console.log(
-    //  "====",
-    //  eachElem,
-    //  eachElem.id === assistantRoleDesc || eachElem.id === userRoleDesc,
-    //  assistantRoleDesc,
-    //  userRoleDesc,
-    //);
-
     switch (eachElem.type) {
+      case "hr":
+        if (mustSkipHeaderBlock) {
+          if (beforeHeaderBlock) {
+            beforeHeaderBlock = false;
+            duringHeaderBlock = true;
+          } else if (duringHeaderBlock) {
+            currentRoleMessages = [];
+            duringHeaderBlock = false;
+          }
+        }
+
+        break;
+
       case "h2":
         if (
           eachElem.id.toString() == assistantRoleDesc ||
@@ -206,6 +236,7 @@ export async function elemsToMessage(
             currentRoleMessages = [];
           }
         }
+
         break;
 
       case "pre":
@@ -244,6 +275,11 @@ export async function elemsToMessage(
         currentRoleMessages.push(newTextBody(eachElem.text));
         break;
     }
+  }
+
+  if (mustSkipHeaderBlock && duringHeaderBlock) {
+    currentRoleMessages = [];
+    duringHeaderBlock = false;
   }
 
   if (currentRoleMessages.length !== 0) {

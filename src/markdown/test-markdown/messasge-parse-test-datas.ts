@@ -3,6 +3,7 @@ import input_2 from "./message-parse-2.md" with { type: "text" };
 import input_3 from "./message-parse-3.md" with { type: "text" };
 import input_4 from "./message-parse-4.md" with { type: "text" };
 import input_5 from "./message-parse-5.md" with { type: "text" };
+import input_6 from "./message-parse-6.md" with { type: "text" };
 
 import { type MessageBody } from "~/ai-service";
 
@@ -150,6 +151,40 @@ const datas: (string | QueryMessages)[][] = [
       ],
 
       newMessage: [],
+    },
+  ],
+
+  [
+    input_6,
+
+    {
+      history: [
+        {
+          messages: [
+            {
+              text: "this  is a user message",
+              type: "text",
+            },
+          ],
+          role: "user",
+        },
+        {
+          messages: [
+            {
+              text: "hi i am a assistant",
+              type: "text",
+            },
+          ],
+          role: "assistant",
+        },
+      ],
+
+      newMessage: [
+        {
+          text: "this  is new user message",
+          type: "text",
+        },
+      ],
     },
   ],
 ];

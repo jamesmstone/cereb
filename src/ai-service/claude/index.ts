@@ -56,7 +56,7 @@ class ClaudeChat implements Chat {
   }
 
   async sendQuery(query: Query): Promise<QueryResponse> {
-    var messages: Array<Anthropic.MessageParam> = this.messageHistory.map(
+    let messages: Array<Anthropic.MessageParam> = this.messageHistory.map(
       (eachMessage) => messageHistoryToParam(eachMessage),
     );
     const newMessageParams = query.bodies.map((eachBody) =>

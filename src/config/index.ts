@@ -1,4 +1,4 @@
-var configData: any = undefined;
+let configData: any = undefined;
 
 export function setConfigData(data: any) {
   configData = data;
