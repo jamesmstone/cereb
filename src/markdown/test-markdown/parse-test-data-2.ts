@@ -6,7 +6,7 @@ const input = `
 id: some
 aliases: []
 tags:
-  - clippings
+- clippings
 author:
   - "[[@auth0]]"
 created: "2024-09-20"
