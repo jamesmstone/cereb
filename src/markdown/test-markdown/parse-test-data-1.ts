@@ -37,6 +37,9 @@ assistant
 ---
 
 	asdf
+\`\`\`lang-cereb-meta
+this is  ignored
+\`\`\`
 `;
 
 const expected = [
