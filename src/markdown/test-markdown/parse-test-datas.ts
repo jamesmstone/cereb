@@ -4,7 +4,4 @@ import { type Elem } from "~/markdown";
 
 const datas: (string | Elem[])[][] = [data1, data2];
 
-//
-//     ★ parse_test1.ts
-//     ★ parse_test_datas.ts
 export default datas;

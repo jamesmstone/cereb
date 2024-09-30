@@ -9,6 +9,7 @@ import {
 } from "~/ai-service";
 import path from "path";
 import * as cheerio from "cheerio";
+import { type QueryMessages } from "~/query";
 
 const obsidianInternalLinkRegex = /\[\[([^\[\]]+?)\]\]/g;
 
@@ -259,12 +260,6 @@ export async function elemsToMessage(
       newMessage: [],
     };
   }
-}
-
-//TODO(tacogips) move to appropriate module
-export interface QueryMessages {
-  history: Array<MessageHistory>;
-  newMessage: Array<MessageBody>;
 }
 
 export async function messagesFromMarkdown(

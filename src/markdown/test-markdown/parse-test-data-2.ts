@@ -47,6 +47,19 @@ const expected = [
     type: "p_without_link",
   },
   {
+    text: "clippings\n\nother\nauthor:\n\n",
+    type: "list_elem",
+  },
+  {
+    text: "other\nauthor:",
+    type: "list_elem",
+  },
+  {
+    text: '"[[@auth0]]"\ncreated: "2024-09-20"\ndescription: xxx\nsource:  somewhere\ntitle: no',
+    type: "list_elem",
+  },
+
+  {
     id: "user",
     text: "user",
     type: "h2",
@@ -55,6 +68,25 @@ const expected = [
     text: "user text",
     type: "p_without_link",
   },
+
+  {
+    text: "alice:\n    greeding\nbob:\n    hi",
+    type: "p_without_link",
+  },
+  {
+    text: '"atags":',
+    type: "p_without_link",
+  },
+  {
+    class: undefined,
+    content: "- clippings\n- eee",
+    type: "pre",
+  },
+  {
+    text: "asf",
+    type: "p_without_link",
+  },
+
   {
     id: "assistant",
     text: "assistant",
