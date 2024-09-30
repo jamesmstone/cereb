@@ -172,27 +172,40 @@ export async function elemsToMessage(
   let currentRoleMessages: Array<MessageBody> = [];
 
   const userRoleDesc = roleDescription(Role.User);
-  const assistantRoleDesc = roleDescription(Role.User);
+  const assistantRoleDesc = roleDescription(Role.Assistant);
 
   for (const eachElem of elems) {
+    //TODO() debug
+    //console.log(
+    //  "====",
+    //  eachElem,
+    //  eachElem.id === assistantRoleDesc || eachElem.id === userRoleDesc,
+    //  assistantRoleDesc,
+    //  userRoleDesc,
+    //);
+
     switch (eachElem.type) {
       case "h2":
-        if (eachElem.id == assistantRoleDesc || eachElem.id == userRoleDesc) {
-          messageHistories.push({
-            role: currentRole,
-            messages: currentRoleMessages,
-          });
-          switch (eachElem.id) {
-            case assistantRoleDesc:
-              currentRole = Role.Assistant;
-              break;
-            case userRoleDesc:
-              currentRole = Role.User;
-              break;
+        if (
+          eachElem.id.toString() == assistantRoleDesc ||
+          eachElem.id.toString() === userRoleDesc
+        ) {
+          if (currentRoleMessages.length !== 0) {
+            messageHistories.push({
+              role: currentRole,
+              messages: currentRoleMessages,
+            });
+            switch (eachElem.id) {
+              case assistantRoleDesc:
+                currentRole = Role.Assistant;
+                break;
+              case userRoleDesc:
+                currentRole = Role.User;
+                break;
+            }
+            currentRoleMessages = [];
           }
-          currentRoleMessages = [];
         }
-        //skip for now
         break;
 
       case "pre":
