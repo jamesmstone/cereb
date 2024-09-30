@@ -20,11 +20,11 @@ const program = new Command();
 program
   .name("cereb")
   .argument("[input_file]", "input file name or input from stdin")
-  .option("--raw-message")
+  .option("--raw-input")
   .option("--dry-run")
-  .option("--format <string>", "json|markdown", "markdown")
   .option("--no-latest-query")
-  .option("--no-histroy")
+  .option("--no-history")
+  .option("--format <string>", "json|markdown", "markdown")
   .option("--max-token <number>", "maximum token to generate")
   .option(
     "--model <string>",
@@ -38,12 +38,12 @@ const [inputFile] = program.args;
 const {
   model,
   format,
-  rawMessage,
+  rawInput,
   dryRun,
   attachement,
   pretty,
-  noLatestQuery,
-  noHistory,
+  latestQuery,
+  history,
   maxToken,
 } = program.opts();
 
@@ -82,7 +82,7 @@ if (attachement) {
   queryMessage.newMessage.push(attachementMessage);
 }
 
-if (rawMessage) {
+if (rawInput) {
   queryMessage.newMessage.push(newTextBody(input));
 } else {
   const { history, newMessage } = await messagesFromMarkdown(input);
@@ -95,7 +95,6 @@ if (queryMessage.newMessage.length === 0) {
   process.exit(1);
 }
 
-console.log("=====", queryMessage.history);
 let response: QueryResponse;
 if (dryRun) {
   response = emptyResponse();
@@ -118,7 +117,7 @@ if (typedFormat === "markdown") {
     response.usedModel,
   );
 
-  if (!noHistory) {
+  if (history) {
     queryMessage.history.forEach((history) => {
       const markdownInput = messageBodyToMarkdown(
         history.role,
@@ -128,7 +127,7 @@ if (typedFormat === "markdown") {
     });
   }
 
-  if (!noLatestQuery) {
+  if (latestQuery) {
     const markdownInput = messageBodyToMarkdown(
       Role.User,
       queryMessage.newMessage,
@@ -147,11 +146,11 @@ if (typedFormat === "markdown") {
   };
 
   const input = [];
-  if (!noLatestQuery) {
+  if (latestQuery) {
     input.push(...queryMessage.history);
   }
 
-  if (!noLatestQuery) {
+  if (latestQuery) {
     input.push({
       role: Role.User,
       messages: queryMessage.newMessage,
