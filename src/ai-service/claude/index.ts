@@ -60,9 +60,9 @@ class ClaudeChat implements Chat {
     let messages: Array<Anthropic.MessageParam> = this.messageHistory.map(
       (eachMessage) => messageHistoryToParam(eachMessage),
     );
-    const newMessageParams = query.bodies.map((eachBody) =>
-      messageBodyToParam(eachBody),
-    );
+    const newMessageParams = query.bodies
+      .filter((eachBody) => eachBody.type != "ignore")
+      .map((eachBody) => messageBodyToParam(eachBody));
     const newMessage: Anthropic.MessageParam = {
       role: Role.User,
       content: newMessageParams,
@@ -133,6 +133,9 @@ function messageBodyToParam(
         },
         type: "image",
       };
+
+    case "ignore":
+      throw new Error("ignore message body should not be sent ");
   }
 }
 
@@ -141,9 +144,9 @@ function messageHistoryToParam(
 ): Anthropic.MessageParam {
   return {
     role: messageHistory.role,
-    content: messageHistory.messages.map((eachMessage) =>
-      messageBodyToParam(eachMessage),
-    ),
+    content: messageHistory.messages
+      .filter((eachBody) => eachBody.type != "ignore")
+      .map((eachMessage) => messageBodyToParam(eachMessage)),
   };
 }
 

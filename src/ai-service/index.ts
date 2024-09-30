@@ -82,7 +82,7 @@ export function emptyResponse(): QueryResponse {
   };
 }
 
-export type MessageBody = TextBody | ImageBody;
+export type MessageBody = TextBody | ImageBody | IgnoreBody;
 
 export function newTextBody(text: string): TextBody {
   return {
@@ -102,6 +102,13 @@ export function newImageBody(
   };
 }
 
+export function newIgnoreBody(text: string): IgnoreBody {
+  return {
+    type: "ignore",
+    text,
+  };
+}
+
 export type TextBody = {
   type: "text";
   text: string;
@@ -111,6 +118,11 @@ export type ImageBody = {
   type: "image";
   imageType: ImageType;
   base64Image: string;
+};
+
+export type IgnoreBody = {
+  type: "ignore";
+  text: string;
 };
 
 function listModelNames(): string[] {

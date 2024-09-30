@@ -23,7 +23,7 @@ some text
 
 what is this?
 
-[[inner_image.png]]
+![[inner_image.png]]
 
 [aaa](http://funny-example.me/some.jpg)
 
@@ -70,27 +70,32 @@ const expected = [
     type: "p_with_link",
     href: "/current/image.png",
     text: "some",
+    class: "attached-image",
   },
   {
     type: "p_with_link",
     href: "/current/image.png",
     text: "aaa",
+    class: "link",
   },
   {
     type: "p_without_link",
     text: "what is this?",
   },
   {
+    class: "inner-link",
     href: "/workdir/inner_image.png",
-    text: "[[inner_image.png]]",
+    text: "inner_image.png",
     type: "p_with_link",
   },
   {
     type: "p_with_link",
     href: "http://funny-example.me/some.jpg",
     text: "aaa",
+    class: "link",
   },
   {
+    class: "link",
     type: "p_with_link",
     href: "http://inner-image.me/some.jpg",
     text: "http://inner-image.me/some.jpg",
