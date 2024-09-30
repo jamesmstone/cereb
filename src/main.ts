@@ -112,6 +112,7 @@ if (typedFormat === "markdown") {
     Role.Assistant,
     response.content,
     response.tokenUsage,
+    response.usedModel,
   );
 
   if (!noInput) {
@@ -137,6 +138,7 @@ if (typedFormat === "markdown") {
     input?: Array<MessageHistory>;
     response: Array<MessageBody>;
     tokenUsage: TokenUsage;
+    model: string | null;
   };
   if (!noInput) {
     let queryHistory = queryMessage.history;
@@ -148,11 +150,13 @@ if (typedFormat === "markdown") {
       input: queryHistory,
       response: response.content,
       tokenUsage: response.tokenUsage,
+      model: response.usedModel,
     };
   } else {
     jsonResult = {
       response: response.content,
       tokenUsage: response.tokenUsage,
+      model: response.usedModel,
     };
   }
 

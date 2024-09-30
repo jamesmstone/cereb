@@ -324,7 +324,8 @@ export async function messagesFromMarkdown(
 export function messageBodyToMarkdown(
   role: Role,
   contents: Array<MessageBody>,
-  meta?: TokenUsage,
+  tokenUsae?: TokenUsage,
+  usedModel?: string | null,
 ): string {
   let content = contents
     .map((content) => {
@@ -334,10 +335,11 @@ export function messageBodyToMarkdown(
       return null;
     })
     .join("\n");
-  if (meta) {
+  if (tokenUsae) {
     content += `\n\`\`\`cereb-meta
-input  token: ${meta.inputToken}
-output token: ${meta.outputToken}
+input  token: ${tokenUsae.inputToken}
+output token: ${tokenUsae.outputToken}
+model       : ${usedModel}
 \`\`\`
 `;
   }

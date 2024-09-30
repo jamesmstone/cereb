@@ -43,6 +43,11 @@ text
 
 const expected = [
   {
+    headOfPage: true,
+    type: "hr",
+  },
+
+  {
     text: "id: some\naliases: []\ntags:",
     type: "p_without_link",
   },
@@ -57,6 +62,11 @@ const expected = [
   {
     text: '"[[@auth0]]"\ncreated: "2024-09-20"\ndescription: xxx\nsource:  somewhere\ntitle: no',
     type: "list_elem",
+  },
+
+  {
+    headOfPage: false,
+    type: "hr",
   },
 
   {

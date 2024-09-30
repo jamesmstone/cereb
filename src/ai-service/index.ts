@@ -67,6 +67,7 @@ export type MessageHistory = {
 
 export type QueryResponse = {
   tokenUsage: TokenUsage;
+  usedModel: string | null;
   content: Array<MessageBody>;
 };
 
@@ -76,6 +77,7 @@ export function emptyResponse(): QueryResponse {
       inputToken: 0,
       outputToken: 0,
     },
+    usedModel: null,
     content: [],
   };
 }

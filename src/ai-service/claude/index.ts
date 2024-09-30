@@ -9,6 +9,7 @@ import {
   type MessageBody,
   type TokenUsage,
   type QueryResponse,
+  Role,
   strToImageType,
 } from "~/ai-service";
 
@@ -63,7 +64,7 @@ class ClaudeChat implements Chat {
       messageBodyToParam(eachBody),
     );
     const newMessage: Anthropic.MessageParam = {
-      role: "user",
+      role: Role.User,
       content: newMessageParams,
     };
     messages.push(newMessage);
@@ -91,12 +92,12 @@ class ClaudeChat implements Chat {
       contentToMessageBody(each),
     );
     const newAssistantMesageHisotries: MessageHistory = {
-      role: "assistant",
+      role: Role.Assistant,
       messages: responseBodies,
     };
 
     const newUserMessageHistories: MessageHistory = {
-      role: "user",
+      role: Role.User,
       messages: newMessageParams.map((eachMessage) =>
         paramToMessageBody(eachMessage),
       ),
@@ -111,6 +112,7 @@ class ClaudeChat implements Chat {
 
     return {
       tokenUsage: { inputToken: input_tokens, outputToken: output_tokens },
+      usedModel: this.model,
       content: responseBodies,
     };
   }
