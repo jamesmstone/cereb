@@ -20,7 +20,7 @@ const program = new Command();
 program
   .name("cereb")
   .argument("[input_file]", "input file name or input from stdin")
-  .option("--markdown")
+  .option("--raw-message")
   .option("--dry-run")
   .option("--format <string>", "json|markdown", "markdown")
   .option("--no-input", "default true")
@@ -37,7 +37,7 @@ const [inputFile] = program.args;
 const {
   model,
   format,
-  markdown,
+  rawMessage,
   dryRun,
   attachement,
   pretty,
@@ -80,12 +80,17 @@ if (attachement) {
   queryMessage.newMessage.push(attachementMessage);
 }
 
-if (markdown) {
+if (rawMessage) {
+  queryMessage.newMessage.push(newTextBody(input));
+} else {
   const { history, newMessage } = await messagesFromMarkdown(input);
   queryMessage.history = history;
   queryMessage.newMessage = newMessage;
-} else {
-  queryMessage.newMessage.push(newTextBody(input));
+}
+
+if (queryMessage.newMessage.length === 0) {
+  console.error("No new user query");
+  process.exit(1);
 }
 
 let response: QueryResponse;
