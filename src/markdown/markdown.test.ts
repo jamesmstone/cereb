@@ -16,3 +16,18 @@ describe("parse markdown", () => {
     }
   });
 });
+
+describe("parse message", () => {
+  test("parseMessage", () => {
+    for (const [input, expected] of parse_test_datas) {
+      const parsed = parseMarkdownAsHtml(
+        input as string,
+        "/workdir",
+        "/current",
+      );
+      const elems = htmlToElems(parsed);
+      const elemsToMessage(elems);
+      expect(actual).toEqual(expected as Elem[]);
+    }
+  });
+});

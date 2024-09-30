@@ -1,10 +1,21 @@
 import { Marked, Parser, Renderer, MarkedOptions } from "@ts-stack/markdown";
 import { isUrl, pathOrUrlToAttachmentMessage } from "~/attachment";
-import { type MessageBody, newTextBody, type TokenUsage } from "~/ai-service";
+import {
+  Role,
+  type MessageHistory,
+  type MessageBody,
+  newTextBody,
+  type TokenUsage,
+} from "~/ai-service";
 import path from "path";
 import * as cheerio from "cheerio";
 
 const obsidianInternalLinkRegex = /\[\[([^\[\]]+?)\]\]/g;
+
+function roleDescription(role: Role): string {
+  return "cereb-" + role;
+}
+
 class CustomMdRenderer extends Renderer {
   constructor(
     private rootDirPath?: string,
@@ -153,12 +164,33 @@ export function htmlToElems(html: string): Array<Elem> {
 
 export async function elemsToMessage(
   elems: Array<Elem>,
-): Promise<Array<MessageBody>> {
-  let messages: Array<MessageBody> = [];
+): Promise<QueryMessages> {
+  let messageHistories: Array<MessageHistory> = [];
+
+  let currentRole = Role.User;
+  let currentRoleMessages: Array<MessageBody> = [];
+
+  const userRoleDesc = roleDescription(Role.User);
+  const assistantRoleDesc = roleDescription(Role.User);
 
   for (const eachElem of elems) {
     switch (eachElem.type) {
       case "h2":
+        if (eachElem.id == assistantRoleDesc || eachElem.id == userRoleDesc) {
+          messageHistories.push({
+            role: currentRole,
+            messages: currentRoleMessages,
+          });
+          switch (eachElem.id) {
+            case assistantRoleDesc:
+              currentRole = Role.Assistant;
+              break;
+            case userRoleDesc:
+              currentRole = Role.User;
+              break;
+          }
+          currentRoleMessages = [];
+        }
         //skip for now
         break;
 
@@ -167,48 +199,85 @@ export async function elemsToMessage(
           if (eachElem.class.startsWith("lang-")) {
             if (eachElem.class !== "lang-cereb-meta") {
               const lang = eachElem.class.replace("lang-", "");
-              messages.push(
+              currentRoleMessages.push(
                 newTextBody(`\`\`\`${lang}\n${eachElem.content}\n\`\`\``),
               );
             }
           } else {
-            messages.push(newTextBody(`\`\`\`\n${eachElem.content}\n\`\`\``));
+            currentRoleMessages.push(
+              newTextBody(`\`\`\`\n${eachElem.content}\n\`\`\``),
+            );
           }
         } else {
-          messages.push(newTextBody(`\`\`\`\n${eachElem.content}\n\`\`\``));
+          currentRoleMessages.push(
+            newTextBody(`\`\`\`\n${eachElem.content}\n\`\`\``),
+          );
         }
         break;
       case "list_elem":
-        messages.push(newTextBody("- " + eachElem.text));
+        currentRoleMessages.push(newTextBody("- " + eachElem.text));
         break;
 
       case "p_with_link":
         if (eachElem.href) {
-          messages.push(await pathOrUrlToAttachmentMessage(eachElem.href));
+          currentRoleMessages.push(
+            await pathOrUrlToAttachmentMessage(eachElem.href),
+          );
         }
         break;
 
       case "p_without_link":
-        messages.push(newTextBody(eachElem.text));
+        currentRoleMessages.push(newTextBody(eachElem.text));
         break;
     }
   }
 
-  return messages;
+  if (currentRoleMessages.length !== 0) {
+    messageHistories.push({
+      role: currentRole,
+      messages: currentRoleMessages,
+    });
+    currentRoleMessages = [];
+  }
+
+  if (messageHistories.length === 0) {
+    return {
+      history: [],
+      newMessage: [],
+    };
+  }
+  const lastRoleMessages = messageHistories.pop() as MessageHistory;
+  if (lastRoleMessages.role === Role.User) {
+    return {
+      history: messageHistories,
+      newMessage: lastRoleMessages.messages,
+    };
+  } else {
+    messageHistories.push(lastRoleMessages);
+    return {
+      history: messageHistories,
+      newMessage: [],
+    };
+  }
+}
+
+interface QueryMessages {
+  history: Array<MessageHistory>;
+  newMessage: Array<MessageBody>;
 }
 
 export async function messagesFromMarkdown(
   md: string,
   rootWorkingDir?: string,
   currentDir?: string,
-): Promise<Array<MessageBody>> {
+): Promise<QueryMessages> {
   const parsedHtml = parseMarkdownAsHtml(md, rootWorkingDir, currentDir);
   const elems = htmlToElems(parsedHtml);
   return await elemsToMessage(elems);
 }
 
 export function messageBodyToMarkdown(
-  role: string,
+  role: Role,
   contents: Array<MessageBody>,
   meta?: TokenUsage,
 ): string {
@@ -228,7 +297,7 @@ output token: ${meta.outputToken}
 `;
   }
 
-  return `${role}
+  return `${roleDescription(role)}
 ---
 ${content}`;
 }

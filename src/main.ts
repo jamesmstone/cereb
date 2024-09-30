@@ -1,6 +1,7 @@
 import {
   type MessageBody,
   type QueryResponse,
+  Role,
   newAiClientFromModel,
   newTextBody,
   type TokenUsage,
@@ -93,13 +94,13 @@ if (dryRun) {
 
 if (typedFormat === "markdown") {
   const markdownResponse = messageBodyToMarkdown(
-    "assistant",
+    Role.Assistant,
     response.content,
     response.tokenUsage,
   );
 
   if (!noInput) {
-    const markdownInput = messageBodyToMarkdown("user", queryMessages);
+    const markdownInput = messageBodyToMarkdown(Role.User, queryMessages);
     process.stdout.write(markdownInput + "\n\n");
   }
 

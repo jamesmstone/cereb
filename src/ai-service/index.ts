@@ -7,6 +7,11 @@ export interface AiClient {
   newChat: () => Promise<Chat>;
 }
 
+export enum Role {
+  User = "user",
+  Assistant = "assistant",
+}
+
 export interface TokenUsage {
   inputToken: number;
   outputToken: number;
@@ -15,6 +20,7 @@ export interface TokenUsage {
 export interface Chat {
   sendQuery: (query: Query) => Promise<QueryResponse>;
   history: () => Array<MessageHistory>;
+  pushHistories: (histories: Array<MessageHistory>) => void;
   tokenUsage: () => TokenUsage;
 }
 
@@ -55,7 +61,7 @@ export interface Query {
 }
 
 export type MessageHistory = {
-  role: "user" | "assistant";
+  role: Role;
   messages: Array<MessageBody>;
 };
 
