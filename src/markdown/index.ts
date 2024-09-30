@@ -1,11 +1,12 @@
 import { Marked, Renderer, MarkedOptions } from "@ts-stack/markdown";
-import { isUrl, isFilePath, pathOrUrlToAttachmentMessage } from "~/attachment";
+import { isUrl, pathOrUrlToAttachmentMessage } from "~/attachment";
 import {
   Role,
   type MessageHistory,
   type MessageBody,
   newTextBody,
   type TokenUsage,
+  detectImageTypeFromFilePathOrUrl,
 } from "~/ai-service";
 import path from "path";
 import * as cheerio from "cheerio";
@@ -46,15 +47,14 @@ class CustomMdRenderer extends Renderer {
   override paragraph(text: string) {
     text = text.replace(obsidianInternalLinkRegex, (match, innerLink) => {
       let destination;
-      if (isUrl(innerLink)) {
-        destination = innerLink;
-        return `<a href="${destination}">${innerLink}</a>`;
+      let imageType = detectImageTypeFromFilePathOrUrl(innerLink);
+      if (imageType) {
+        destination = this.rootDirPath
+          ? path.join(this.rootDirPath, innerLink)
+          : innerLink;
+        return `<a href="${destination}">[[${innerLink}]]</a>`;
       } else {
-        //destination = this.rootDirPath
-        //  ? path.join(this.rootDirPath, innerLink)
-        //  : innerLink;
-        //TODO(tacogips) open the innternal link as attachement in the future
-        return "**" + innerLink + "**";
+        return "[[" + innerLink + "]]";
       }
     });
     return `<p>` + text + `</p>\n`;
@@ -281,6 +281,7 @@ export async function elemsToMessage(
             await pathOrUrlToAttachmentMessage(eachElem.href),
           );
         }
+        currentRoleMessages.push(newTextBody(eachElem.text));
         break;
 
       case "p_without_link":

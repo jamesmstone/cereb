@@ -81,8 +81,9 @@ const expected = [
     text: "what is this?",
   },
   {
-    text: "**inner_image.png**",
-    type: "p_without_link",
+    href: "/workdir/inner_image.png",
+    text: "[[inner_image.png]]",
+    type: "p_with_link",
   },
   {
     type: "p_with_link",

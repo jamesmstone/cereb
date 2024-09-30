@@ -32,7 +32,7 @@ const datas: (string | QueryMessages)[][] = [
         {
           messages: [
             {
-              text: "this  is a user message\n**some internal link which is not exists**",
+              text: "this  is a user message\n[[some internal link which is not exists]]",
               type: "text",
             },
           ],
