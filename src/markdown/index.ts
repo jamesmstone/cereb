@@ -72,7 +72,6 @@ class CustomMdRenderer extends Renderer {
     }
   }
 
-  // TODO(tacogips) consider support inner link for obsidian
   override paragraph(text: string) {
     text = text.replace(obsidianInternalLinkRegex, (match, innerLink) => {
       if (isUrl(innerLink)) {
