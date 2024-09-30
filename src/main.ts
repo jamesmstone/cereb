@@ -110,6 +110,14 @@ if (typedFormat === "markdown") {
   );
 
   if (!noInput) {
+    queryMessage.history.forEach((history) => {
+      const markdownInput = messageBodyToMarkdown(
+        history.role,
+        history.messages,
+      );
+      process.stdout.write(markdownInput + "\n\n");
+    });
+
     const markdownInput = messageBodyToMarkdown(
       Role.User,
       queryMessage.newMessage,
@@ -126,13 +134,13 @@ if (typedFormat === "markdown") {
     tokenUsage: TokenUsage;
   };
   if (!noInput) {
-    let chatHistory = queryMessage.history;
-    chatHistory.push({
+    let queryHistory = queryMessage.history;
+    queryHistory.push({
       role: Role.User,
       messages: queryMessage.newMessage,
     });
     jsonResult = {
-      input: chatHistory,
+      input: queryHistory,
       response: response.content,
       tokenUsage: response.tokenUsage,
     };
