@@ -69,7 +69,7 @@ export function parseMarkdown(
   return result;
 }
 
-type Elem =
+export type Elem =
   | {
       type: "h2";
       id?: string;
@@ -90,7 +90,7 @@ type Elem =
       text: string;
     };
 
-function htmlToElems(html: string): Array<Elem> {
+export function htmlToElems(html: string): Array<Elem> {
   Array<MessageBody>;
   let parser = cheerio.load(html);
 

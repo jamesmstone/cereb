@@ -1,12 +1,14 @@
 import { test, expect, describe } from "bun:test";
-import test_datas from "./test-markdown";
+import parse_test_datas from "./test-markdown/parse-test-datas";
 
-import { parseMarkdown } from "./index";
+import { parseMarkdown, htmlToElems, type Elem } from "./index";
 
 describe("parse markdown", () => {
   test("parseMarkdown", () => {
-    forEach(test_datas, ([input, expected]) => {
-      expect(input).toEqual(expected);
-    });
+    for (const [input, expected] of parse_test_datas) {
+      const parsed = parseMarkdown(input as string, "/workdir", "/current");
+      const actual = htmlToElems(parsed);
+      expect(actual).toEqual(expected as Elem[]);
+    }
   });
 });

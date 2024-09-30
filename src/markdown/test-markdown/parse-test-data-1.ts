@@ -1,4 +1,5 @@
-// TODO(tacogips) test
+import { type Elem } from "~/markdown";
+
 const input = `
 user
 ---
@@ -24,7 +25,7 @@ what is this?
 
 [[image.png]]
 
-[aaa](http://tacogips.me/some.jpg)
+[aaa](http://funny-example.me/some.jpg)
 
 what is this, again?
 
@@ -39,11 +40,6 @@ assistant
 `;
 
 const expected = [
-  {
-    type: "h2",
-    id: "dummy",
-    text: "dummy",
-  },
   {
     type: "h2",
     id: "user",
@@ -66,27 +62,27 @@ const expected = [
   },
   {
     type: "p_with_link",
-    href: "/d/some/root/current/image.png",
+    href: "/current/image.png",
     text: "some",
   },
   {
     type: "p_with_link",
-    href: "/d/some/root/current/image.png",
-    text: "aaa",
-  },
-  {
-    type: "p_with_link",
-    href: "/d/some/root/image.png",
-    text: "image.png",
-  },
-  {
-    type: "p_with_link",
-    href: "http://tacogips.me/some.jpg",
+    href: "/current/image.png",
     text: "aaa",
   },
   {
     type: "p_without_link",
     text: "what is this?",
+  },
+  {
+    type: "p_with_link",
+    href: "/workdir/image.png",
+    text: "image.png",
+  },
+  {
+    type: "p_with_link",
+    href: "http://funny-example.me/some.jpg",
+    text: "aaa",
   },
   {
     type: "p_without_link",
@@ -104,4 +100,4 @@ const expected = [
   },
 ];
 
-export default [input, expected] as string[];
+export default [input, expected] as Array<string | Elem[]>;
