@@ -1,8 +1,10 @@
 import {
   type MessageBody,
+  type QueryResponse,
   newAiClientFromModel,
   newTextBody,
   type TokenUsage,
+  emptyResponse,
 } from "./ai-service";
 import { pathOrUrlToAttachmentMessage } from "./attachment";
 import { messagesFromMarkdown, messageBodyToMarkdown } from "./markdown";
@@ -15,8 +17,9 @@ program
   .name("cereb")
   .argument("[input_file]", "input file name or input from stdin")
   .option("--markdown")
+  .option("--dry-run")
   .option("--format <string>", "json|markdown", "markdown")
-  .option("--with-input")
+  .option("--no-input", "default true")
   .option("--max-token <number>", "maximum token to generate")
   .option(
     "--model <string>",
@@ -27,8 +30,16 @@ program
   .parse();
 
 const [inputFile] = program.args;
-const { model, format, markdown, attachement, pretty, withInput, maxToken } =
-  program.opts();
+const {
+  model,
+  format,
+  markdown,
+  dryRun,
+  attachement,
+  pretty,
+  noInput,
+  maxToken,
+} = program.opts();
 
 type Format = "json" | "markdown";
 
@@ -69,10 +80,16 @@ if (markdown) {
 
 const aiClient = newAiClientFromModel(model);
 const chat = await aiClient.newChat();
-let response = await chat.sendQuery({
-  bodies: queryMessages,
-  maxToken,
-});
+
+let response: QueryResponse;
+if (dryRun) {
+  response = emptyResponse();
+} else {
+  response = await chat.sendQuery({
+    bodies: queryMessages,
+    maxToken,
+  });
+}
 
 if (typedFormat === "markdown") {
   const markdownResponse = messageBodyToMarkdown(
@@ -81,7 +98,7 @@ if (typedFormat === "markdown") {
     response.tokenUsage,
   );
 
-  if (withInput) {
+  if (!noInput) {
     const markdownInput = messageBodyToMarkdown("user", queryMessages);
     process.stdout.write(markdownInput + "\n\n");
   }
@@ -94,7 +111,7 @@ if (typedFormat === "markdown") {
     response: Array<MessageBody>;
     tokenUsage: TokenUsage;
   };
-  if (withInput) {
+  if (!noInput) {
     jsonResult = {
       input: queryMessages,
       response: response.content,

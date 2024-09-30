@@ -50,7 +50,7 @@ class CustomMdRenderer extends Renderer {
   }
 }
 
-export function parseMarkdown(
+export function parseMarkdownAsHtml(
   md: string,
   rootWorkingDir?: string,
   currentDir?: string,
@@ -60,10 +60,8 @@ export function parseMarkdown(
     gfm: true,
     tables: true,
     breaks: false,
-    pedantic: false,
+    pedantic: true,
     sanitize: true,
-    smartLists: true,
-    smartypants: false,
   });
 
   return result;
@@ -81,6 +79,10 @@ export type Elem =
       class?: string;
     }
   | {
+      type: "list_elem";
+      text: string;
+    }
+  | {
       type: "p_with_link";
       href?: string;
       text: string;
@@ -96,7 +98,7 @@ export function htmlToElems(html: string): Array<Elem> {
 
   const elements: Elem[] = [];
 
-  parser("h2, pre, p").each((_index, element) => {
+  parser("h2, pre, p, li").each((_index, element) => {
     const el = parser(element);
     if (!el) {
       return null;
@@ -120,6 +122,13 @@ export function htmlToElems(html: string): Array<Elem> {
           type: "pre",
           content: el.text().trim(),
           class: el.find("code").attr("class"),
+        });
+        break;
+
+      case "li":
+        elements.push({
+          type: "list_elem",
+          text: el.text(),
         });
         break;
       case "p":
@@ -169,6 +178,9 @@ export async function elemsToMessage(
           messages.push(newTextBody(`\`\`\`\n${eachElem.content}\n\`\`\``));
         }
         break;
+      case "list_elem":
+        messages.push(newTextBody("- " + eachElem.text));
+        break;
 
       case "p_with_link":
         if (eachElem.href) {
@@ -190,7 +202,7 @@ export async function messagesFromMarkdown(
   rootWorkingDir?: string,
   currentDir?: string,
 ): Promise<Array<MessageBody>> {
-  const parsedHtml = parseMarkdown(md, rootWorkingDir, currentDir);
+  const parsedHtml = parseMarkdownAsHtml(md, rootWorkingDir, currentDir);
   const elems = htmlToElems(parsedHtml);
   return await elemsToMessage(elems);
 }

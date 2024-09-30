@@ -6,7 +6,8 @@ const input = `
 id: some
 aliases: []
 tags:
-- clippings
+  - clippings
+	- other
 author:
   - "[[@auth0]]"
 created: "2024-09-20"
@@ -19,6 +20,19 @@ title: no
 user
 ---
 user text
+
+alice:
+	greeding
+bob:
+	hi
+
+
+"atags":
+	- clippings
+	- eee
+
+asf
+
 
 
 assistant

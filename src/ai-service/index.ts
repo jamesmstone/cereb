@@ -64,6 +64,16 @@ export type QueryResponse = {
   content: Array<MessageBody>;
 };
 
+export function emptyResponse(): QueryResponse {
+  return {
+    tokenUsage: {
+      inputToken: 0,
+      outputToken: 0,
+    },
+    content: [],
+  };
+}
+
 export type MessageBody = TextBody | ImageBody;
 
 export function newTextBody(text: string): TextBody {
