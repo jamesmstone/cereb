@@ -1,5 +1,6 @@
 import {
   type MessageBody,
+  type MessageHistory,
   type QueryResponse,
   Role,
   newAiClientFromModel,
@@ -8,7 +9,11 @@ import {
   emptyResponse,
 } from "./ai-service";
 import { pathOrUrlToAttachmentMessage } from "./attachment";
-import { messagesFromMarkdown, messageBodyToMarkdown } from "./markdown";
+import {
+  messagesFromMarkdown,
+  messageBodyToMarkdown,
+  type QueryMessages,
+} from "./markdown";
 
 import { Command } from "commander";
 import getStdin from "get-stdin";
@@ -67,27 +72,34 @@ if (!input || !input.trim()) {
 
 const typedFormat = validateFormat(format);
 
-let queryMessages: Array<MessageBody> = [];
+const queryMessage: QueryMessages = {
+  history: [],
+  newMessage: [],
+};
+
 if (attachement) {
   const attachementMessage = await pathOrUrlToAttachmentMessage(attachement);
-
-  queryMessages.push(attachementMessage);
+  queryMessage.newMessage.push(attachementMessage);
 }
+
 if (markdown) {
-  queryMessages.push(...(await messagesFromMarkdown(input)));
+  const { history, newMessage } = await messagesFromMarkdown(input);
+  queryMessage.history = history;
+  queryMessage.newMessage = newMessage;
 } else {
-  queryMessages.push(newTextBody(input));
+  queryMessage.newMessage.push(newTextBody(input));
 }
-
-const aiClient = newAiClientFromModel(model);
-const chat = await aiClient.newChat();
 
 let response: QueryResponse;
 if (dryRun) {
   response = emptyResponse();
 } else {
+  const aiClient = newAiClientFromModel(model);
+  const chat = await aiClient.newChat();
+  chat.pushHistories(queryMessage.history);
+
   response = await chat.sendQuery({
-    bodies: queryMessages,
+    bodies: queryMessage.newMessage,
     maxToken,
   });
 }
@@ -100,7 +112,10 @@ if (typedFormat === "markdown") {
   );
 
   if (!noInput) {
-    const markdownInput = messageBodyToMarkdown(Role.User, queryMessages);
+    const markdownInput = messageBodyToMarkdown(
+      Role.User,
+      queryMessage.newMessage,
+    );
     process.stdout.write(markdownInput + "\n\n");
   }
 
@@ -108,13 +123,18 @@ if (typedFormat === "markdown") {
   process.exit(0);
 } else if (typedFormat === "json") {
   let jsonResult: {
-    input?: Array<MessageBody>;
+    input?: Array<MessageHistory>;
     response: Array<MessageBody>;
     tokenUsage: TokenUsage;
   };
   if (!noInput) {
+    let chatHistory = queryMessage.history;
+    chatHistory.push({
+      role: Role.User,
+      messages: queryMessage.newMessage,
+    });
     jsonResult = {
-      input: queryMessages,
+      input: chatHistory,
       response: response.content,
       tokenUsage: response.tokenUsage,
     };

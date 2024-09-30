@@ -261,7 +261,8 @@ export async function elemsToMessage(
   }
 }
 
-interface QueryMessages {
+//TODO(tacogips) move to appropriate module
+export interface QueryMessages {
   history: Array<MessageHistory>;
   newMessage: Array<MessageBody>;
 }
