@@ -15,7 +15,7 @@ program
   .name("cereb")
   .argument("[input_file]", "input file name or input from stdin")
   .option("--markdown")
-  .option("--format <string>", "json|markdown", "json")
+  .option("--format <string>", "json|markdown", "markdown")
   .option("--with-input")
   .option("--max-token <number>", "maximum token to generate")
   .option(
