@@ -37,8 +37,9 @@ assistant
 ---
 
 	asdf
-\`\`\`lang-cereb-meta
-this is  ignored
+\`\`\`cereb-meta
+this block will be ignored
+
 \`\`\`
 `;
 
@@ -100,6 +101,11 @@ const expected = [
     type: "pre",
     content: "asdf",
     class: undefined,
+  },
+  {
+    class: "lang-cereb-meta",
+    content: "this block will be ignored",
+    type: "pre",
   },
 ];
 
