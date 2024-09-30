@@ -23,7 +23,8 @@ program
   .option("--raw-message")
   .option("--dry-run")
   .option("--format <string>", "json|markdown", "markdown")
-  .option("--no-input", "default true")
+  .option("--no-latest-query")
+  .option("--no-histroy")
   .option("--max-token <number>", "maximum token to generate")
   .option(
     "--model <string>",
@@ -41,7 +42,8 @@ const {
   dryRun,
   attachement,
   pretty,
-  noInput,
+  noLatestQuery,
+  noHistory,
   maxToken,
 } = program.opts();
 
@@ -115,7 +117,7 @@ if (typedFormat === "markdown") {
     response.usedModel,
   );
 
-  if (!noInput) {
+  if (!noHistory) {
     queryMessage.history.forEach((history) => {
       const markdownInput = messageBodyToMarkdown(
         history.role,
@@ -123,7 +125,9 @@ if (typedFormat === "markdown") {
       );
       process.stdout.write(markdownInput + "\n\n");
     });
+  }
 
+  if (!noLatestQuery) {
     const markdownInput = messageBodyToMarkdown(
       Role.User,
       queryMessage.newMessage,
@@ -140,25 +144,25 @@ if (typedFormat === "markdown") {
     tokenUsage: TokenUsage;
     model: string | null;
   };
-  if (!noInput) {
-    let queryHistory = queryMessage.history;
-    queryHistory.push({
+
+  const input = [];
+  if (!noLatestQuery) {
+    input.push(...queryMessage.history);
+  }
+
+  if (!noLatestQuery) {
+    input.push({
       role: Role.User,
       messages: queryMessage.newMessage,
     });
-    jsonResult = {
-      input: queryHistory,
-      response: response.content,
-      tokenUsage: response.tokenUsage,
-      model: response.usedModel,
-    };
-  } else {
-    jsonResult = {
-      response: response.content,
-      tokenUsage: response.tokenUsage,
-      model: response.usedModel,
-    };
   }
+
+  jsonResult = {
+    input: input,
+    response: response.content,
+    tokenUsage: response.tokenUsage,
+    model: response.usedModel,
+  };
 
   if (pretty) {
     process.stdout.write(JSON.stringify(jsonResult, null, 4));
