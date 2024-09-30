@@ -95,6 +95,7 @@ if (queryMessage.newMessage.length === 0) {
   process.exit(1);
 }
 
+console.log("=====", queryMessage.history);
 let response: QueryResponse;
 if (dryRun) {
   response = emptyResponse();
