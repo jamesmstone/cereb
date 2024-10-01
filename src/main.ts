@@ -20,12 +20,13 @@ const program = new Command();
 program
   .name("cereb")
   .argument("[input_file]", "input file name or input from stdin")
-  .option("--raw-input")
+  .option("--raw-input", "treat the input as raw text, not markdown")
   .option("--dry-run")
-  .option("--no-latest-query")
-  .option("--no-history")
+  .option("--no-latest-query", "output without latest query")
+  .option("--no-history", "output without history but the latest query")
   .option("--format <string>", "json|markdown", "markdown")
   .option("--max-token <number>", "maximum token to generate")
+  .option("--work-root-dir <string>", "maximum token to generate")
   .option(
     "--model <string>",
     "specified or read from environment ${CEREB_DEFAULT_MODEL}",
@@ -45,6 +46,8 @@ const {
   latestQuery,
   history,
   maxToken,
+  workRootDir,
+  workCurrentDir,
 } = program.opts();
 
 type Format = "json" | "markdown";
@@ -85,7 +88,11 @@ if (attachement) {
 if (rawInput) {
   queryMessage.newMessage.push(newTextBody(input));
 } else {
-  const { history, newMessage } = await messagesFromMarkdown(input);
+  const { history, newMessage } = await messagesFromMarkdown(
+    input,
+    workRootDir,
+    workCurrentDir,
+  );
   queryMessage.history = history;
   queryMessage.newMessage = newMessage;
 }

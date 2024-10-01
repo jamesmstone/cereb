@@ -1,4 +1,5 @@
 import { Marked, Renderer, MarkedOptions } from "@ts-stack/markdown";
+
 import { isUrl, pathOrUrlToAttachmentMessage } from "~/attachment";
 import {
   Role,
@@ -379,13 +380,11 @@ export async function elemsToMessage(
 
 export async function messagesFromMarkdown(
   md: string,
-  rootDir?: string,
+  workRootDir?: string,
   currentDir?: string,
 ): Promise<QueryMessages> {
-  const parsedHtml = parseMarkdownAsHtml(md, currentDir);
-
+  const parsedHtml = parseMarkdownAsHtml(md, workRootDir, currentDir);
   const elems = htmlToElems(parsedHtml);
-
   return await elemsToMessage(elems);
 }
 
