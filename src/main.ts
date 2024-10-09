@@ -91,7 +91,7 @@ if (rawInput) {
   const { history, newMessage } = await messagesFromMarkdown(
     input,
     workRootDir,
-    workCurrentDir,
+    workCurrentDir || process.cwd(),
   );
   queryMessage.history = history;
   queryMessage.newMessage = newMessage;

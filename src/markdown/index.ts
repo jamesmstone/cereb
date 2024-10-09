@@ -1,6 +1,10 @@
 import { Marked, Renderer, MarkedOptions } from "@ts-stack/markdown";
 
-import { isUrl, pathOrUrlToAttachmentMessage } from "~/attachment";
+import {
+  isUrl,
+  pathOrUrlToAttachmentMessage,
+  filePathExists,
+} from "~/attachment";
 import {
   Role,
   type MessageHistory,
@@ -26,6 +30,26 @@ enum AttachmentClass {
   InnerLink = "inner-link",
 }
 
+function searchAndReturnExistingFile(
+  filePath: string,
+  rootDirPath?: string,
+  currentDirPath?: string,
+): string | null {
+  if (currentDirPath) {
+    if (filePathExists(filePath, currentDirPath)) {
+      return path.join(currentDirPath, filePath);
+    }
+  }
+
+  if (rootDirPath) {
+    if (filePathExists(filePath, rootDirPath)) {
+      return path.join(rootDirPath, filePath);
+    }
+  }
+
+  return null;
+}
+
 class CustomMdRenderer extends Renderer {
   constructor(
     private rootDirPath?: string,
@@ -44,9 +68,14 @@ class CustomMdRenderer extends Renderer {
       if (isUrl(href)) {
         destination = href;
       } else {
-        destination = this.currentDirPath
-          ? path.join(this.currentDirPath, href)
-          : href;
+        destination = searchAndReturnExistingFile(
+          href,
+          this.rootDirPath,
+          this.currentDirPath,
+        );
+        if (destination == null) {
+          return `[${text}](${href})`;
+        }
       }
 
       return `<a href="${destination}" class="${AttachmentClass.Link}">${text}</a>`;
@@ -62,9 +91,14 @@ class CustomMdRenderer extends Renderer {
       if (isUrl(href)) {
         destination = href;
       } else {
-        destination = this.currentDirPath
-          ? path.join(this.currentDirPath, href)
-          : href;
+        destination = searchAndReturnExistingFile(
+          href,
+          this.rootDirPath,
+          this.currentDirPath,
+        );
+        if (destination == null) {
+          return href;
+        }
       }
 
       return `<a href="${destination}" class="${AttachmentClass.Image}">${text}</a>`;
@@ -81,9 +115,15 @@ class CustomMdRenderer extends Renderer {
       let destination;
       let imageType = detectImageTypeFromFilePathOrUrl(innerLink);
       if (imageType) {
-        destination = this.rootDirPath
-          ? path.join(this.rootDirPath, innerLink)
-          : innerLink;
+        destination = searchAndReturnExistingFile(
+          innerLink,
+          this.rootDirPath,
+          this.currentDirPath,
+        );
+        if (destination == null) {
+          return "![[" + innerLink + "]]";
+        }
+
         return `<a href="${destination}" class="${AttachmentClass.InnerLink}">${innerLink}</a> ![[${innerLink}]]`;
       } else {
         return "![[" + innerLink + "]]";

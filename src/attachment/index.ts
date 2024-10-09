@@ -34,7 +34,7 @@ export function isUrl(maybeUrl: string): boolean {
   return (
     maybeUrl.startsWith("http:") ||
     maybeUrl.startsWith("https:") ||
-    maybeUrl.startsWith("ftp")
+    maybeUrl.startsWith("ftp:")
   );
 }
 
@@ -129,4 +129,8 @@ export async function pathOrUrlToAttachmentMessage(
       }
       return newTextBody(attachmentType.url);
   }
+}
+
+export function filePathExists(pattern: string, cwd?: string): boolean {
+  return Array.from(new Bun.Glob(pattern).scanSync(cwd)).length > 0;
 }
