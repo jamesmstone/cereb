@@ -26,7 +26,14 @@ program
   .option("--no-history", "output without history but the latest query")
   .option("--format <string>", "json|markdown", "markdown")
   .option("--max-token <number>", "maximum token to generate")
-  .option("--work-root-dir <string>", "maximum token to generate")
+  .option(
+    "--work-current-dir <string>",
+    "dir to search attachment file in markdown",
+  )
+  .option(
+    "--work-root-dir <string>",
+    "dir to search attachment file in markdown",
+  )
   .option(
     "--model <string>",
     "specified or read from environment ${CEREB_DEFAULT_MODEL}",
