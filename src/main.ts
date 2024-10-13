@@ -7,6 +7,7 @@ import {
   newTextBody,
   type TokenUsage,
   emptyResponse,
+  allModelList,
 } from "./ai-service";
 import { pathOrUrlToAttachmentMessage } from "./attachment";
 import { messagesFromMarkdown, messageBodyToMarkdown } from "./markdown";
@@ -20,6 +21,7 @@ const program = new Command();
 program
   .name("cereb")
   .argument("[input_file]", "input file name or input from stdin")
+  .option("--list-models")
   .option("--raw-input", "treat the input as raw text, not markdown")
   .option("--dry-run")
   .option("--no-latest-query", "output without latest query")
@@ -40,6 +42,12 @@ program
   )
   .option("--attachement <string>", "file path or url")
   .option("--pretty")
+  .description(
+    `
+API keys for each service are given by environment variables:
+'OPENAI_API_KEY' for OpenAI API
+'ANTHROPIC_API_KEY' for	Claude API`,
+  )
   .parse();
 
 const [inputFile] = program.args;
@@ -53,9 +61,14 @@ const {
   latestQuery,
   history,
   maxToken,
+  listModels,
   workRootDir,
   workCurrentDir,
 } = program.opts();
+if (listModels) {
+  console.log(allModelList());
+  process.exit(0);
+}
 
 type Format = "json" | "markdown";
 

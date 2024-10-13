@@ -1,6 +1,8 @@
-import definition from "./definition.json";
+import * as claudeModels from "./claude/models.json";
+import * as openAIModels from "./openai/models.json";
 
 import { ClaudeClient } from "./claude";
+import { OpenAIClient } from "./openai";
 import { defaultAiModel } from "~/config";
 
 export interface AiClient {
@@ -57,7 +59,7 @@ export interface Query {
   bodies: Array<MessageBody>;
   systemPrompt?: Array<TextBody>;
   maxToken?: number;
-  temperature?: number; // 0.0 - 1.0  for Claude
+  temperature?: number; // 0.0 - 1.0  for Claude, between 0 and 2 for OpenAI //TODO(tacogips) unify this
 }
 
 export type MessageHistory = {
@@ -125,30 +127,29 @@ export type IgnoreBody = {
   text: string;
 };
 
-function listModelNames(): string[] {
-  return definition.models;
-}
-function detectAiService(modelName: string): AiService {
-  if (modelName.startsWith("claude-")) {
-    return AiService.Claude;
-  }
-  throw new Error(`unknown model name ${modelName}`);
-}
 export enum AiService {
   Claude,
+  OpenAI,
 }
 export type AiModel = {
   modelName: string;
   service: AiService;
 };
 
-export function aiModelFromName(modelName: string): AiModel {
-  const allModelNames = listModelNames();
-  if (!allModelNames.includes(modelName)) {
-    throw new Error(`unknown model name ${modelName}`);
+function searchAiServiceByModelName(modelName: string): AiService {
+  if (claudeModels["models"].includes(modelName)) {
+    return AiService.Claude;
   }
 
-  const service = detectAiService(modelName);
+  if (openAIModels["models"].includes(modelName)) {
+    return AiService.OpenAI;
+  }
+
+  throw new Error(`unknown model name ${modelName}`);
+}
+
+export function aiModelFromName(modelName: string): AiModel {
+  const service = searchAiServiceByModelName(modelName);
   return { modelName, service };
 }
 
@@ -160,8 +161,16 @@ export function newAiClientFromModel(specifiedModelName?: string): AiClient {
     );
   }
   const aiModel = aiModelFromName(modelName);
+
   switch (aiModel.service) {
     case AiService.Claude:
       return new ClaudeClient(aiModel.modelName);
+
+    case AiService.OpenAI:
+      return new OpenAIClient(aiModel.modelName);
   }
+}
+
+export function allModelList(): string[] {
+  return [...claudeModels["models"], ...openAIModels["models"]];
 }

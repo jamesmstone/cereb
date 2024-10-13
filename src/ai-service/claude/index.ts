@@ -58,7 +58,7 @@ class ClaudeChat implements Chat {
 
   async sendQuery(query: Query): Promise<QueryResponse> {
     let messages: Array<Anthropic.MessageParam> = this.messageHistory.map(
-      (eachMessage) => messageHistoryToParam(eachMessage),
+      (eachMessage) => messageHistoryToClaudeParam(eachMessage),
     );
     const newMessageParams = query.bodies
       .filter((eachBody) => eachBody.type != "ignore")
@@ -139,7 +139,7 @@ function messageBodyToParam(
   }
 }
 
-function messageHistoryToParam(
+function messageHistoryToClaudeParam(
   messageHistory: MessageHistory,
 ): Anthropic.MessageParam {
   return {
@@ -160,7 +160,7 @@ function paramToMessageBody(
     case "image":
       const imageType = strToImageType[param.source.media_type];
       if (!imageType) {
-        throw new Error("unknown image type ${param.source.media_type}");
+        throw new Error(`unknown image type ${param.source.media_type}`);
       }
       return {
         type: "image",

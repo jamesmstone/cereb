@@ -6,7 +6,7 @@ export function setConfigData(data: any) {
 
 export interface ConfigKey {
   envKey: string;
-  configDataKey: string;
+  configDataKey: string; // key for config data in config file
 }
 
 export function defaultAiModel(): string | undefined {
