@@ -66,7 +66,7 @@ const {
   workCurrentDir,
 } = program.opts();
 if (listModels) {
-  console.log(allModelList());
+  console.log(JSON.stringify(allModelList(), null, 2));
   process.exit(0);
 }
 
