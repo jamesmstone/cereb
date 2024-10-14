@@ -6,12 +6,12 @@ export interface ClaudeConfig {
 }
 
 const apiSecretConfigKey: ConfigKey = {
-  envKey: "ANTHROPIC_API_KEY",
+  envKey: "CEREB_ANTHROPIC_API_KEY",
   configDataKey: "", //TODO(tacogips) define
 };
 
 const defaultMaxTokenNumber: ConfigKey = {
-  envKey: "ANTHROPIC_MAX_TOKEN_NUM",
+  envKey: "CEREB_ANTHROPIC_MAX_TOKEN_NUM",
   configDataKey: "", //TODO(tacogips) define
 };
 

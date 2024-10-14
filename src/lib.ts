@@ -1,3 +1,4 @@
+//TOOD(tacogips) Make it possible to use as a library
 //import {
 //  type MessageBody,
 //  type MessageHistory,

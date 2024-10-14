@@ -6,12 +6,12 @@ export interface OpenAIConfig {
 }
 
 const apiSecretConfigKey: ConfigKey = {
-  envKey: "OPENAI_API_KEY",
+  envKey: "CEREB_OPENAI_API_KEY",
   configDataKey: "", //TODO(tacogips) define
 };
 
 const defaultMaxTokenNumber: ConfigKey = {
-  envKey: "OPENAI_MAX_TOKEN_NUM",
+  envKey: "CEREB_OPENAI_MAX_TOKEN_NUM",
   configDataKey: "", //TODO(tacogips) define
 };
 

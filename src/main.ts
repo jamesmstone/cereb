@@ -45,8 +45,8 @@ program
   .description(
     `
 API keys for each service are given by environment variables:
-'OPENAI_API_KEY' for OpenAI API
-'ANTHROPIC_API_KEY' for	Claude API`,
+'CEREB_OPENAI_API_KEY' for OpenAI API
+'CEREB_ANTHROPIC_API_KEY' for	Claude API`,
   )
   .parse();
 
