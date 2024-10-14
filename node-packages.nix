@@ -22,13 +22,13 @@ let
         sha512 = "ntVX2Kmb2jyTdH94plJohokvDVPvp6CwXHqsa9NVZTK8cOmHDCYNW0j6thIadUVRTStJhxhfdeovLd0owqDxLw==";
       };
     };
-    "@types/node-18.19.50" = {
+    "@types/node-18.19.55" = {
       name = "_at_types_slash_node";
       packageName = "@types/node";
-      version = "18.19.50";
+      version = "18.19.55";
       src = fetchurl {
-        url = "https://registry.npmjs.org/@types/node/-/node-18.19.50.tgz";
-        sha512 = "xonK+NRrMBRtkL1hVCc3G+uXtjh1Al4opBLjqVmipe5ZAaBYWW6cNAiBVZ1BvmkBhep698rP3UM3aRAdSALuhg==";
+        url = "https://registry.npmjs.org/@types/node/-/node-18.19.55.tgz";
+        sha512 = "zzw5Vw52205Zr/nmErSEkN5FLqXPuKX/k5d1D7RKHATGqU7y6YfX9QxZraUzUrFGqH6XzOzG196BC35ltJC4Cw==";
       };
     };
     "@types/node-fetch-2.6.11" = {
@@ -211,13 +211,13 @@ let
         sha512 = "i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==";
       };
     };
-    "form-data-4.0.0" = {
+    "form-data-4.0.1" = {
       name = "form-data";
       packageName = "form-data";
-      version = "4.0.0";
+      version = "4.0.1";
       src = fetchurl {
-        url = "https://registry.npmjs.org/form-data/-/form-data-4.0.0.tgz";
-        sha512 = "ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==";
+        url = "https://registry.npmjs.org/form-data/-/form-data-4.0.1.tgz";
+        sha512 = "tzN8e4TX8+kkxGPK8D5u0FNmjPUjw3lwC9lSLxxoB/+GtsJG91CO8bSWy73APlgAZzZbXEYZJuxjkHH2w+Ezhw==";
       };
     };
     "form-data-encoder-1.7.2" = {
@@ -328,22 +328,31 @@ let
         sha512 = "lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==";
       };
     };
-    "parse5-7.1.2" = {
-      name = "parse5";
-      packageName = "parse5";
-      version = "7.1.2";
+    "openai-4.67.3" = {
+      name = "openai";
+      packageName = "openai";
+      version = "4.67.3";
       src = fetchurl {
-        url = "https://registry.npmjs.org/parse5/-/parse5-7.1.2.tgz";
-        sha512 = "Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==";
+        url = "https://registry.npmjs.org/openai/-/openai-4.67.3.tgz";
+        sha512 = "HT2tZgjLgRqbLQNKmYtjdF/4TQuiBvg1oGvTDhwpSEQzxo6/oM1us8VQ53vBK2BiKvCxFuq6gKGG70qfwrNhKg==";
       };
     };
-    "parse5-htmlparser2-tree-adapter-7.0.0" = {
+    "parse5-7.2.0" = {
+      name = "parse5";
+      packageName = "parse5";
+      version = "7.2.0";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/parse5/-/parse5-7.2.0.tgz";
+        sha512 = "ZkDsAOcxsUMZ4Lz5fVciOehNcJ+Gb8gTzcA4yl3wnc273BAybYWrQ+Ks/OjCjSEpjvQkDSeZbybK9qj2VHHdGA==";
+      };
+    };
+    "parse5-htmlparser2-tree-adapter-7.1.0" = {
       name = "parse5-htmlparser2-tree-adapter";
       packageName = "parse5-htmlparser2-tree-adapter";
-      version = "7.0.0";
+      version = "7.1.0";
       src = fetchurl {
-        url = "https://registry.npmjs.org/parse5-htmlparser2-tree-adapter/-/parse5-htmlparser2-tree-adapter-7.0.0.tgz";
-        sha512 = "B77tOZrqqfUfnVcOrUvfdLbz4pu4RopLD/4vmu3HUPswwTA8OH0EMW9BlWR2B0RCoiZRAHEUu7IxeP1Pd1UU+g==";
+        url = "https://registry.npmjs.org/parse5-htmlparser2-tree-adapter/-/parse5-htmlparser2-tree-adapter-7.1.0.tgz";
+        sha512 = "ruw5xyKs6lrpo9x9rCZqZZnIUntICjQAd0Wsmp396Ul9lN/h+ifgVV1x1gZHi8euej6wTfpqX8j+BFQxF0NS/g==";
       };
     };
     "parse5-parser-stream-7.1.2" = {
@@ -382,22 +391,22 @@ let
         sha512 = "gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==";
       };
     };
-    "typescript-5.6.2" = {
+    "typescript-5.6.3" = {
       name = "typescript";
       packageName = "typescript";
-      version = "5.6.2";
+      version = "5.6.3";
       src = fetchurl {
-        url = "https://registry.npmjs.org/typescript/-/typescript-5.6.2.tgz";
-        sha512 = "NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==";
+        url = "https://registry.npmjs.org/typescript/-/typescript-5.6.3.tgz";
+        sha512 = "hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==";
       };
     };
-    "undici-6.19.8" = {
+    "undici-6.20.0" = {
       name = "undici";
       packageName = "undici";
-      version = "6.19.8";
+      version = "6.20.0";
       src = fetchurl {
-        url = "https://registry.npmjs.org/undici/-/undici-6.19.8.tgz";
-        sha512 = "U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==";
+        url = "https://registry.npmjs.org/undici/-/undici-6.20.0.tgz";
+        sha512 = "AITZfPuxubm31Sx0vr8bteSalEbs9wQb/BOBi9FPlD9Qpd6HxZ4Q0+hI742jBhkPb4RT2v5MQzaW5VhRVyj+9A==";
       };
     };
     "undici-types-5.26.5" = {
@@ -454,6 +463,15 @@ let
         sha512 = "saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==";
       };
     };
+    "zod-3.23.8" = {
+      name = "zod";
+      packageName = "zod";
+      version = "3.23.8";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/zod/-/zod-3.23.8.tgz";
+        sha512 = "XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==";
+      };
+    };
   };
   args = {
     name = "cereb";
@@ -462,7 +480,7 @@ let
     dependencies = [
       sources."@anthropic-ai/sdk-0.27.3"
       sources."@ts-stack/markdown-1.5.0"
-      sources."@types/node-18.19.50"
+      sources."@types/node-18.19.55"
       sources."@types/node-fetch-2.6.11"
       sources."abort-controller-3.0.0"
       sources."agentkeepalive-4.5.0"
@@ -483,7 +501,7 @@ let
       sources."encoding-sniffer-0.2.0"
       sources."entities-4.5.0"
       sources."event-target-shim-5.0.1"
-      sources."form-data-4.0.0"
+      sources."form-data-4.0.1"
       sources."form-data-encoder-1.7.2"
       sources."formdata-node-4.4.1"
       sources."get-stdin-9.0.0"
@@ -496,20 +514,22 @@ let
       sources."node-domexception-1.0.0"
       sources."node-fetch-2.7.0"
       sources."nth-check-2.1.1"
-      sources."parse5-7.1.2"
-      sources."parse5-htmlparser2-tree-adapter-7.0.0"
+      sources."openai-4.67.3"
+      sources."parse5-7.2.0"
+      sources."parse5-htmlparser2-tree-adapter-7.1.0"
       sources."parse5-parser-stream-7.1.2"
       sources."safer-buffer-2.1.2"
       sources."tr46-0.0.3"
       sources."tslib-2.7.0"
-      sources."typescript-5.6.2"
-      sources."undici-6.19.8"
+      sources."typescript-5.6.3"
+      sources."undici-6.20.0"
       sources."undici-types-5.26.5"
       sources."web-streams-polyfill-4.0.0-beta.3"
       sources."webidl-conversions-3.0.1"
       sources."whatwg-encoding-3.1.1"
       sources."whatwg-mimetype-4.0.0"
       sources."whatwg-url-5.0.0"
+      sources."zod-3.23.8"
     ];
     buildInputs = globalBuildInputs;
     meta = {
